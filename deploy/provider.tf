@@ -1,7 +1,7 @@
 terraform{
     backend "s3"{
         bucket  = "roboshopbucket"
-        key     = "roboshopbucket/projectdeploy/terraform.tfstate"
+        key     = "roboshopbucket/ansible/terraform.tfstate"
         region  = "us-east-1"
         dynamodb_table = "terraform1"
     }

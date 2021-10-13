@@ -8,12 +8,12 @@ resource "aws_instance" "cheap_worker" {
   }
 }
 
-# resource "aws_ec2_tag" "name-tag" {
-#   count                     = local.LENGTH
-#   resource_id               = element(aws_instance.cheap_worker.*.public_ip, count.index)
-#   key                       = "Name"
-#   value                     = element(var.COMPONENTS, count.index)
-# }
+resource "aws_ec2_tag" "name-tag" {
+   count                     = local.LENGTH
+   resource_id               = element(aws_instance.cheap_worker.*.public_ip, count.index)
+   key                       = "Name"
+   value                     = element(var.COMPONENTS, count.index)
+ }
 
 resource "aws_security_group" "allow_ssh_single_server" {
     name            = "allow_ssh_single_server"
@@ -48,26 +48,6 @@ resource "aws_route53_record" "records" {
 }
 
 
-
-resource "null_resource" "run-shell-scripting" {
-  depends_on                = [aws_route53_record.records]
-  count                     = local.LENGTH
-  provisioner "remote-exec" {
-    connection {
-      host                  = element(aws_instance.cheap_worker.*.public_ip, count.index)
-      user                  = "centos"
-      password              = "DevOps321"
-    }
-
-    inline = [
-    "cd /home/centos",
-    "git clone https://DevOps-Batches@dev.azure.com/DevOps-Batches/DevOps57/_git/shell-scripting",
-    "cd shell-scripting/roboshop",
-    "git pull",
-    "sudo make ${element(var.COMPONENTS, count.index)}"
-    ]
-  }
-}
 
 locals {
   LENGTH    = length(var.COMPONENTS)
