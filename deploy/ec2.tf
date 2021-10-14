@@ -3,9 +3,6 @@ resource "aws_instance" "instances" {
   ami                       = "ami-074df373d6bafa625"
   instance_type             = "t3.micro"
   vpc_security_group_ids    =  ["sg-04371d9790f1294b1"]
-  tags                      = {
-    Name                    = element(var.COMPONENTS, count.index)
-  }
 }
 
 
