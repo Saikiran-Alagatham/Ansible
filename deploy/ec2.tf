@@ -1,4 +1,4 @@
-resource "aws_instance" "cheap_worker" {
+resource "aws_instance" "instances" {
   count                     = local.LENGTH
   ami                       = "ami-074df373d6bafa625"
   instance_type             = "t3.micro"
@@ -10,7 +10,7 @@ resource "aws_instance" "cheap_worker" {
 
 resource "aws_ec2_tag" "name-tag" {
    count                     = local.LENGTH
-   resource_id               = element(aws_instance.cheap_worker.*.public_ip, count.index)
+   resource_id               = element(aws_instance.instances.*.public_ip, count.index)
    key                       = "Name"
    value                     = element(var.COMPONENTS, count.index)
  }
@@ -44,7 +44,7 @@ resource "aws_route53_record" "records" {
   type                      = "A"
   zone_id                   = "Z04058843B1ZOXKPWHN2J"
   ttl                       = 300
-  records                   = [element(aws_instance.cheap_worker.*.private_ip, count.index)]
+  records                   = [element(aws_instance.instances.*.private_ip, count.index)]
 }
 
 
