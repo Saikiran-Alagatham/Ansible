@@ -10,10 +10,10 @@ resource "aws_instance" "instances" {
 
 resource "aws_ec2_tag" "name-tag" {
    count                     = local.LENGTH
-   resource_id               = element(aws_instance.instances.*.public_ip, count.index)
+   resource_id               = element(aws_instance.instances.*.instance_id, count.index)
    key                       = "Name"
    value                     = element(var.COMPONENTS, count.index)
- }
+}
 
 resource "aws_security_group" "allow_ssh_single_server" {
     name            = "allow_ssh_single_server"
