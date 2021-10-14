@@ -1,4 +1,4 @@
-resource "aws_instance" "cheap_worker" {
+resource "aws_instance" "instances" {
   count                     = local.LENGTH
   ami                       = "ami-074df373d6bafa625"
   instance_type             = "t3.micro"
@@ -15,7 +15,7 @@ resource "aws_route53_record" "records" {
   type                      = "A"
   zone_id                   = "Z00620242Y7LFBGQOS2W8"
   ttl                       = 300
-  records                   = [element(aws_instance.cheap_worker.*.private_ip, count.index)]
+  records                   = [element(aws_instance.instances.*.private_ip, count.index)]
 }
 
 
@@ -25,7 +25,7 @@ resource "null_resource" "run-shell-scripting" {
   count                     = local.LENGTH
   provisioner "remote-exec" {
     connection {
-      host                  = element(aws_instance.cheap_worker.*.public_ip, count.index)
+      host                  = element(aws_instance.instances.*.public_ip, count.index)
       user                  = "centos"
       password              = "DevOps321"
     }
